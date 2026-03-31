@@ -2,11 +2,10 @@ name: cinemetrics
 channels:
   - defaults
 dependencies:
-- python=3.10
+  - python=3.10
   - pandas
   - numpy
   - jupyter
   - ipykernel
   - matplotlib
   - seaborn
-prefix: /opt/miniconda3/envs/cinemetrics
