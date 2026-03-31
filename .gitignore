@@ -1,0 +1,15 @@
+# Conda y Entornos
+.conda/
+env/
+venv/
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Datos (¡Importante!)
+data/raw/*.csv
+data/processed/*.csv
+
+# Mac
+.DS_Store
