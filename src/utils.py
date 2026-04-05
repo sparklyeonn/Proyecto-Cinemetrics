@@ -98,3 +98,32 @@ def auditoria_integridad(df):
     print(f"3. Nulos en columnas críticas: {nulos_finales}")
     
     return negativos == 0 and duplicados == 0 and nulos_finales == 0
+
+
+# --- ALE (Transformación Avanzada e Ingeniería de Atributos) ---
+
+def limpiar_generos(json_str):
+    """
+    Transforma el string JSON anidado de géneros en una lista simple de nombres.
+    Utiliza list comprehension para optimizar la velocidad de procesamiento.
+    """
+    try:
+        # ast.literal_eval convierte el texto en una estructura de datos real de Python
+        lista = ast.literal_eval(json_str)
+        return [item['name'] for item in lista]
+    except (ValueError, SyntaxError):
+        return []
+
+def asignar_temporada(mes):
+    """
+    Clasifica un mes numérico (1-12) en una temporada cinematográfica clave
+    para analizar el impacto del 'Timing' de estreno en los ingresos.
+    """
+    if mes in [5, 6, 7, 8]:
+        return 'Blockbuster Verano'
+    elif mes in [10, 11, 12]:
+        return 'Temporada Premios'
+    elif mes in [1, 2]:
+        return 'Enero Dump / Invierno'
+    else:
+        return 'Temporada Media'
