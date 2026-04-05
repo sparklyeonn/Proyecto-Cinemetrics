@@ -52,3 +52,49 @@ def extraer_director(texto_crew):
     except:
         return "Desconocido"
     return "Desconocido"
+
+
+# --- JIME (Limpieza y Auditoria) ---
+
+def sanear_datos(df):
+    """
+    FASE 3: Limpieza y Tratamiento de Nulos.
+    Mantiene la integridad del dataset procesado por Gene.
+    """
+    # Copia para no afectar el df original por accidente
+    df_clean = df.copy()
+
+    # 1. Tratamiento de Nulos en 'runtime' (Duración)
+    # Justificación: Imputamos con la mediana para no sesgar por películas muy largas.
+    mediana_runtime = df_clean['runtime'].median()
+    df_clean['runtime'] = df_clean['runtime'].fillna(mediana_runtime)
+
+    # 2. Limpieza de columnas de texto (Overview / Tagline)
+    df_clean['overview'] = df_clean['overview'].fillna("Sin descripción")
+    df_clean['tagline'] = df_clean['tagline'].fillna("Sin eslogan")
+
+    # 3. Verificación de fechas (Si no hay fecha, se elimina porque es dato crítico)
+    df_clean = df_clean.dropna(subset=['release_date'])
+    
+    return df_clean
+
+def auditoria_integridad(df):
+    """
+    FASE 3: Validación de Calidad.
+    Asegura que los datos sean lógicos post-limpieza.
+    """
+    print("\n--- 🔍 REPORTE DE AUDITORÍA (JIME) ---")
+    
+    # Check 1: ¿Hay presupuestos negativos?
+    negativos = df[df['budget'] < 0].shape[0]
+    print(f"1. Presupuestos negativos encontrados: {negativos}")
+
+    # Check 2: ¿Hay duplicados por ID?
+    duplicados = df.duplicated(subset=['id']).sum()
+    print(f"2. Registros duplicados detectados: {duplicados}")
+
+    # Check 3: ¿Quedaron nulos en columnas numéricas clave?
+    nulos_finales = df[['budget', 'revenue', 'runtime']].isnull().sum().sum()
+    print(f"3. Nulos en columnas críticas: {nulos_finales}")
+    
+    return negativos == 0 and duplicados == 0 and nulos_finales == 0
