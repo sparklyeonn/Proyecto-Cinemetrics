@@ -102,3 +102,14 @@ def asignar_temporada(mes):
         return 'Enero Dump / Invierno'
     else:
         return 'Temporada Media'
+
+
+def limpiar_estudios(json_str):
+    """
+    Extrae la lista de estudios productores desde el formato JSON.
+    """
+    try:
+        lista = ast.literal_eval(json_str)
+        return [item['name'] for item in lista]
+    except (ValueError, SyntaxError):
+        return []
